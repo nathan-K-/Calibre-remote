@@ -1,0 +1,72 @@
+version: "3.3"
+services:
+  reverseProxy:
+    image: nginx:1.13
+    hostname: nginxCalibre
+    ports:
+      - 80:80
+    depends_on: #ignored by docker stack ...
+      - calibreWeb
+    configs:
+      - source: nginx-global
+        target: /etc/nginx/nginx.conf
+        uid: '103'
+        gid: '103'
+        mode: 0440
+      - source: nginx-proxy-config
+        target: /etc/nginx/conf.d/proxy.conf
+        uid: '103'
+        gid: '103'
+        mode: 0440
+      - source: nginx-ava-config
+        target: /etc/nginx/sites-available/calibre.site
+        uid: '103'
+        gid: '103'
+        mode: 0440
+      - source: nginx-ena-config
+        target: /etc/nginx/sites-enabled/calibre.site
+        uid: '103'
+        gid: '103'
+        mode: 0440
+    deploy:
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          memory: 2G
+
+  calibreWeb:
+    image: linuxserver/calibre-web
+    hostname: calibreWeb
+    volumes:
+      - "/home/nathan/Bibliotheque_calibre:/calibre"
+    deploy:
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          memory: 4G
+
+  #nmap:
+  #  image: uzyexe/nmap
+  #  command: "nmap -p 1-65535 -T4 -A -v calibreWeb"
+  #  depends_on:
+  #    - calibreWeb
+
+ # calibreServer:
+ #   image: janeczku/calibre-web
+ #   hostname: calibreServer
+ #   container_name: calibre-server
+
+configs:
+  nginx-global:
+    file: ./config/calibre-web-nginx-config/nginx.conf
+  nginx-proxy-config:
+    file: ./config/calibre-web-nginx-config/conf.d/proxy.conf
+  nginx-ava-config:
+    file: ./config/calibre-web-nginx-config/sites-available/calibre.site
+  nginx-ena-config:
+    file: ./config/calibre-web-nginx-config/sites-enabled/calibre.site
+
+#volumes:
+#  - calibre-data:/home/nathan/Bibliotheque_calibre
