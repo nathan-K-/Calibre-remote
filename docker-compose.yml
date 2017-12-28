@@ -39,7 +39,7 @@ services:
     image: linuxserver/calibre-web
     hostname: calibreWeb
     volumes:
-      - "/home/nathan/Bibliotheque_calibre:/calibre"
+      - "~/Bibliotheque_calibre:/calibre"
     deploy:
       restart_policy:
         condition: on-failure
