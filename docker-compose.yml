@@ -4,7 +4,7 @@ services:
     image: nginx:1.13
     hostname: nginxCalibre
     ports:
-      - 80:80
+      - 443:443
     depends_on: #ignored by docker stack ...
       - calibreWeb
     configs:

@@ -3,7 +3,7 @@ upstream calibre {
 }
 
 server {
-	listen 80;
+	listen 443;
 
 	charset utf-8;
 
